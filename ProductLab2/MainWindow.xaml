@@ -1,0 +1,107 @@
+﻿<Window x:Class="ProductLab2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProductLab2"
+        mc:Ignorable="d"
+        Title="Product" Height="412" Width="678" Closing="Window_Closing">
+    <Grid>
+        <TabControl Grid.Row="0" Grid.Column="0">
+            <TabItem Header="Orders">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <WrapPanel Grid.Row="0" VerticalAlignment="Center" Margin="4">
+                        <Button x:Name="addOrderButton" Margin="0" MinHeight="24" MinWidth="100">Add order</Button>
+                        <Button x:Name="editOrderButton" Margin="8,0,0,0" MinHeight="24" MinWidth="100">Edit order</Button>
+                    </WrapPanel>
+                    <ListView Grid.Row="1" Margin="4">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
+                                <GridViewColumn Header="Units in stock" DisplayMemberBinding="{Binding UnitsInStock}"></GridViewColumn>
+                                <GridViewColumn Header="Price" Width="60" DisplayMemberBinding="{Binding Price}"></GridViewColumn>
+                                <GridViewColumn Header="Category" Width="120" DisplayMemberBinding="{Binding Category.Name}"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Products">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <WrapPanel Grid.Row="0" VerticalAlignment="Center" Margin="4">
+                            <Button x:Name="addProductButton" Margin="0" MinHeight="24" MinWidth="100" Click="addProductButton_Click">Add product</Button>
+                            <Button x:Name="editProductButton" Margin="8,0,0,0" MinHeight="24" MinWidth="100" IsEnabled="{Binding IsProductSelected}" Click="editProductButton_Click">Edit product</Button>
+                        </WrapPanel>
+                        <ListView x:Name="productDataGrid" Grid.Row="1" Margin="4,4,4,0" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
+                                    <GridViewColumn Header="Units in stock" DisplayMemberBinding="{Binding UnitsInStock}"></GridViewColumn>
+                                    <GridViewColumn Header="Price" Width="60" DisplayMemberBinding="{Binding Price}"></GridViewColumn>
+                                    <GridViewColumn Header="Category" Width="120" DisplayMemberBinding="{Binding Category.Name}"></GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="2" Margin="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="60" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Height="20" x:Name="categoryAddTextBox" Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="categoryAddTextBox_TextChanged"/>
+                            <Button x:Name="categoryAddButton" Height="20" Grid.Column="1" Click="categoryAddButton_Click">Add</Button>
+                        </Grid>
+                        <TextBlock FontSize="18" FontWeight="Bold" Margin="0,4">Kategorie</TextBlock>
+                        <ListView x:Name="categoriesList" Grid.Row="1" Grid.Column="0" IsSynchronizedWithCurrentItem="False" Margin="4,0" SelectionChanged="categoriesList_SelectionChanged">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                                    </WrapPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Grid>
+                
+            </TabItem>
+            <TabItem Header="Clients">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <WrapPanel Grid.Row="0" VerticalAlignment="Center">
+                        <TextBlock Margin="0,0,8,0">Search:</TextBlock>
+                        <TextBox x:Name="clientSearchTextBox" Width="200" TextChanged="clientSearchTextBox_TextChanged" />
+                    </WrapPanel>
+                    <DataGrid x:Name="clientDataGrid" Grid.Row="1" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding CompanyName}"/>
+                            <DataGridTextColumn Binding="{Binding Description}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
