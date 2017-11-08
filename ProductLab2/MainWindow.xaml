@@ -15,16 +15,15 @@
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <WrapPanel Grid.Row="0" VerticalAlignment="Center" Margin="4">
-                        <Button x:Name="addOrderButton" Margin="0" MinHeight="24" MinWidth="100">Add order</Button>
-                        <Button x:Name="editOrderButton" Margin="8,0,0,0" MinHeight="24" MinWidth="100">Edit order</Button>
+                        <Button x:Name="addOrderButton" Margin="0" MinHeight="24" MinWidth="100" Click="addOrderButton_Click">Add order</Button>
+                        <Button x:Name="editOrderButton" Margin="8,0,0,0" MinHeight="24" MinWidth="100" Click="editOrderButton_Click">Edit order</Button>
                     </WrapPanel>
-                    <ListView Grid.Row="1" Margin="4">
+                    <ListView x:Name="ordersList" Grid.Row="1" Margin="4">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
-                                <GridViewColumn Header="Units in stock" DisplayMemberBinding="{Binding UnitsInStock}"></GridViewColumn>
-                                <GridViewColumn Header="Price" Width="60" DisplayMemberBinding="{Binding Price}"></GridViewColumn>
-                                <GridViewColumn Header="Category" Width="120" DisplayMemberBinding="{Binding Category.Name}"></GridViewColumn>
+                                <GridViewColumn Header="Client" Width="200" DisplayMemberBinding="{Binding Customer.CompanyName}"></GridViewColumn>
+                                <GridViewColumn Header="Products" DisplayMemberBinding="{Binding ProductCount}"></GridViewColumn>
+                                <GridViewColumn Header="Price" Width="120" DisplayMemberBinding="{Binding OrderPrice}"></GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -50,7 +49,7 @@
                                 <GridView>
                                     <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
                                     <GridViewColumn Header="Units in stock" DisplayMemberBinding="{Binding UnitsInStock}"></GridViewColumn>
-                                    <GridViewColumn Header="Price" Width="60" DisplayMemberBinding="{Binding Price}"></GridViewColumn>
+                                    <GridViewColumn Header="Price" Width="60" DisplayMemberBinding="{Binding Unitprice}"></GridViewColumn>
                                     <GridViewColumn Header="Category" Width="120" DisplayMemberBinding="{Binding Category.Name}"></GridViewColumn>
                                 </GridView>
                             </ListView.View>
@@ -70,7 +69,7 @@
                             <TextBox Height="20" x:Name="categoryAddTextBox" Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="categoryAddTextBox_TextChanged"/>
                             <Button x:Name="categoryAddButton" Height="20" Grid.Column="1" Click="categoryAddButton_Click">Add</Button>
                         </Grid>
-                        <TextBlock FontSize="18" FontWeight="Bold" Margin="0,4">Kategorie</TextBlock>
+                        <TextBlock FontSize="18" FontWeight="Bold" Margin="0,4">Categories</TextBlock>
                         <ListView x:Name="categoriesList" Grid.Row="1" Grid.Column="0" IsSynchronizedWithCurrentItem="False" Margin="4,0" SelectionChanged="categoriesList_SelectionChanged">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
@@ -90,16 +89,19 @@
                         <RowDefinition Height="30"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <WrapPanel Grid.Row="0" VerticalAlignment="Center">
+                    <WrapPanel Grid.Row="0" VerticalAlignment="Center" Margin="4,0,0,0">
                         <TextBlock Margin="0,0,8,0">Search:</TextBlock>
-                        <TextBox x:Name="clientSearchTextBox" Width="200" TextChanged="clientSearchTextBox_TextChanged" />
+                        <TextBox x:Name="clientSearchTextBox" Width="200" TextChanged="clientSearchTextBox_TextChanged" Margin="0,0,8,0" />
+                        <Button Width="80" x:Name="addClientButton" Click="addClientButton_Click">Add client</Button>
                     </WrapPanel>
-                    <DataGrid x:Name="clientDataGrid" Grid.Row="1" >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding CompanyName}"/>
-                            <DataGridTextColumn Binding="{Binding Description}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <ListView x:Name="clientsList" Grid.Row="1" Grid.Column="0" Margin="4,0">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Company name" Width="160" DisplayMemberBinding="{Binding CompanyName}"></GridViewColumn>
+                                <GridViewColumn Header="Description" Width="480" DisplayMemberBinding="{Binding Description}"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </Grid>
             </TabItem>
         </TabControl>

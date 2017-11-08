@@ -14,7 +14,11 @@ namespace ProductLab2
     {
         public int CategoryID { get; set; }
         public String Name { get; set; }
-        public List<Product> Products { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
+        public Category()
+        {
+            Products = new List<Product>();
+        }
     }
 
     public class Product
@@ -47,9 +51,13 @@ namespace ProductLab2
     public class Order
     {
         public int OrderID { get; set; }
-        public int CustomerID { get; set; }
         public virtual Customer Customer { get; set; }
-        public List<OrderItem> Items { get; set; }
+        public virtual ICollection<OrderItem> Items { get; set; }
+
+        public Order()
+        {
+            Items = new List<OrderItem>();
+        }
     }
 
     public class ProdContext : DbContext
@@ -58,6 +66,7 @@ namespace ProductLab2
         public DbSet<Product> Products { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         // Usage of the Fluent API
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

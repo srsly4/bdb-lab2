@@ -1,0 +1,69 @@
+﻿<Window x:Class="ProductLab2.AddOrderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProductLab2"
+        mc:Ignorable="d"
+        Title="Order details" Height="334" Width="622" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
+    <Window.DataContext>
+        <local:Order/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Background="LightGray">
+                <StackPanel Margin="16">
+                    <TextBlock>Client:</TextBlock>
+                    <ComboBox x:Name="customerComboBox" Margin="0,0,0,16" SelectedItem="{Binding Customer, Mode=TwoWay}"
+                              DisplayMemberPath="CompanyName" SelectedValuePath="CustomerID"/>
+                    <TextBlock>Product category filter:</TextBlock>
+                    <ComboBox x:Name="categoryFilterComboBox" Margin="0,0,0,16"
+                              DisplayMemberPath="Name"
+                              SelectedItem="{Binding Path=CategoryFilter,
+                          Mode=TwoWay,
+                          RelativeSource={RelativeSource Mode=FindAncestor,
+                                                         AncestorType=Window}}" SelectionChanged="categoryFilterComboBox_SelectionChanged"></ComboBox>
+                </StackPanel>
+            </StackPanel>
+            <WrapPanel Grid.Row="1" HorizontalAlignment="Right">
+                <Button Margin="8,4" MinWidth="80" Click="Button_Click">Cancel</Button>
+                <Button Margin="8,4" MinWidth="80" Click="Button_Click_1">Save</Button>
+            </WrapPanel>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="265*"/>
+            </Grid.RowDefinitions>
+            <WrapPanel Margin="4" VerticalAlignment="Center">
+                <WrapPanel.DataContext>
+                    <local:OrderItem/>
+                </WrapPanel.DataContext>
+                <TextBlock Margin="4,0" VerticalAlignment="Center">Add product: </TextBlock>
+                <ComboBox MinWidth="160" SelectedItem="{Binding Product, Mode=TwoWay}"
+                          SelectedValue="{Binding ProductID, Mode=TwoWay}"
+                          DisplayMemberPath="Name" SelectedValuePath="ProductID"
+                          x:Name="addProductToOrderCombobox" Margin="0,0,4,0"></ComboBox>
+                <TextBox x:Name="addProductToOrderUnitsCombobox" Text="{Binding Units, Mode=TwoWay}" Width="40" Margin="0,0,4,0"></TextBox>
+                <Button MinWidth="60" x:Name="addProductToOrderButton" Click="addProductToOrderButton_Click">Add</Button>
+            </WrapPanel>
+            <ListView x:Name="orderItemsList" Grid.Row="1" Margin="4,0,4,4" ItemsSource="{Binding Items, Mode=TwoWay}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" Width="170" DisplayMemberBinding="{Binding Product.Name}"></GridViewColumn>
+                        <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Units}"></GridViewColumn>
+                        <GridViewColumn Header="Item price" Width="60" DisplayMemberBinding="{Binding Product.Unitprice}"></GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+    </Grid>
+</Window>

@@ -35,20 +35,25 @@ namespace ProductLab2
             dbContext.Categories.Load();
             categoriesList.ItemsSource = dbContext.Categories.Local.ToBindingList();
 
+            refreshClients();
             refreshProducts();
+            refreshOrders();
         }
 
         void refreshClients()
         {
             if (clientSearchTextBox.Text != String.Empty)
             {
-                clientDataGrid.ItemsSource = (from client in dbContext.Customers
+                clientsList.ItemsSource = (from client in dbContext.Customers
                                              orderby client.CompanyName
                                              where client.CompanyName.Contains(clientSearchTextBox.Text)
                                              select client).ToList();
             } else
             {
-                clientDataGrid.ItemsSource = dbContext.Customers.OrderBy(client => client.CompanyName).Select(client => client).ToList();
+                clientsList.ItemsSource = dbContext.Customers
+                    .OrderBy(client => client.CompanyName)
+                    .Select(client => client)
+                    .ToList();
             }
         }
 
@@ -68,6 +73,28 @@ namespace ProductLab2
                     .OrderBy(product => product.Name)
                     .Include("Category")
                     .Select(product => product).ToList();
+            }
+        }
+
+        void refreshOrders()
+        {
+            var query = (from order in dbContext.Orders.Include("Customer")
+                         join orderItem in dbContext.OrderItems on order.OrderID equals orderItem.OrderID
+                         group orderItem by order into g
+                         select new
+                         {
+                             OrderId = g.Key.OrderID,
+                             Order = g.Key,
+                             Customer = g.Key.Customer,
+                             ProductCount = g.Count(),
+                             OrderPrice = g.Sum(oi => oi.Product.Unitprice * oi.Units),
+                         });
+            ordersList.Items.Clear();
+
+            // deferred query execution
+            foreach (var order in query)
+            {
+                ordersList.Items.Add(order);
             }
         }
 
@@ -91,7 +118,7 @@ namespace ProductLab2
 
         private void clientSearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
+            this.refreshClients();
         }
 
         private void addProductButton_Click(object sender, RoutedEventArgs e)
@@ -140,6 +167,79 @@ namespace ProductLab2
         {
             this.currentCategory = (Category)categoriesList.SelectedItem;
             refreshProducts();
+        }
+
+        private void addClientButton_Click(object sender, RoutedEventArgs e)
+        {
+            var customer = new Customer();
+            var modal = new AddClientWindow(dbContext, customer);
+            modal.Owner = this;
+            using (var transaction = dbContext.Database.BeginTransaction())
+            {
+                if (modal.Recall())
+                {
+                    dbContext.Customers.Add(customer);
+                    dbContext.SaveChanges();
+                    transaction.Commit();
+                    refreshClients();
+                }
+                else
+                {
+                    transaction.Rollback();
+                }
+            }
+        }
+
+        private void addOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            var order = new Order();
+            var modal = new AddOrderWindow(dbContext, order);
+            modal.Owner = this;
+            using (var transaction = dbContext.Database.BeginTransaction())
+            {
+                if (modal.Recall())
+                {
+                    dbContext.Orders.Add(order);
+                    dbContext.SaveChanges();
+                    transaction.Commit();
+                    refreshOrders();
+                }
+                else
+                {
+                    transaction.Rollback();
+                }
+            }
+        }
+
+        private void editOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ordersList.SelectedItem != null)
+            {
+                var order = (Order)ordersList.SelectedItem.GetType().GetProperty("Order").GetValue(ordersList.SelectedItem);
+                var modal = new AddOrderWindow(dbContext, order);
+                modal.Owner = this;
+                using (var transaction = dbContext.Database.BeginTransaction())
+                {
+                    if (modal.Recall())
+                    {
+                        try
+                        {
+                            dbContext.SaveChanges();
+                            transaction.Commit();
+                            refreshOrders();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.ToString());
+                            transaction.Rollback();
+                        }
+                    }
+                    else
+                    {
+                        transaction.Rollback();
+                    }
+                }
+            }
         }
     }
 }

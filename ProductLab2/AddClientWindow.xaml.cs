@@ -16,21 +16,18 @@ using System.Windows.Shapes;
 namespace ProductLab2
 {
     /// <summary>
-    /// Logika interakcji dla klasy AddProductWindow.xaml
+    /// Logika interakcji dla klasy AddClientWindow.xaml
     /// </summary>
-    public partial class AddProductWindow : Window
+    public partial class AddClientWindow : Window
     {
         private DbContext context;
         private bool success = false;
 
-        public AddProductWindow(ProdContext context, Product product)
+        public AddClientWindow(ProdContext context, Customer customer)
         {
             InitializeComponent();
             this.context = context;
-            this.DataContext = product;
-
-            categoryComboBox.ItemsSource = context.Categories.Local.ToBindingList();
-
+            this.DataContext = customer;
         }
 
         public bool Recall()
